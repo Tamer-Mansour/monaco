@@ -77,7 +77,7 @@ app.post("/login", async (req, res) => {
     console.error("Error during login:", error);
     res.status(500).json({ message: "Internal server error" });
   }
-});
+}); 
 
 //logout
 app.post("/logout", (req, res) => {

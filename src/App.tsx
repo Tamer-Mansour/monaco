@@ -1,12 +1,12 @@
 import React from 'react';
-import logo from './logo.svg';
-import Signup from './components/auth/Signup';
+import Dashboard from './components/dashbord/Dashboard';
 import AppRoutes from './components/Routes/Index';
 
 function App() {
   return (
     <div className="App">
-      <AppRoutes/>
+      {/* <Dashboard/> */}
+      <Dashboard/>
     </div>
   );
 }

@@ -2,65 +2,43 @@ import React, { useEffect, useState } from "react";
 import { useLocation, Navigate } from "react-router-dom";
 import axios from "axios";
 
-interface User {
-  _id: string;
-  name: string;
-  email: string;
-  role: string;
-}
-
 const HomePage: React.FC = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const location = useLocation();
+  const [userData, setUserData] = useState([""]);
 
   useEffect(() => {
-    const state = (location.state as any)?.state;
-    const _id = state?._id;
+    // Retrieve user data from localStorage
+    const storedUser = localStorage.getItem("user");
+    console.log("7777777777777777777" + storedUser);
+    console.log("2222222222222222222" + userData);
 
-    if (_id) {
-      fetchUserDetails(_id);
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUserData(parsedUser);
+      console.log("3333333333333333" + parsedUser);
     }
-  }, [location.state]);
+  }, []);
 
-  const fetchUserDetails = async (_id: string) => {
-    try {
-      const response = await axios.get<User>(
-        `http://localhost:5000/users/${_id}`,
-        {
-          withCredentials: true,
-        }
-      );
-      setUser(response.data);
-    } catch (error) {
-      console.error("Error fetching user details:", error);
-      setUser(null);
-    }
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    window.location.href = "/signin";
   };
 
-  const handleLogout = async () => {
-    try {
-      await axios.post("http://localhost:5000/logout", null, {
-        withCredentials: true,
-      });
-
-      setUser(null);
-    } catch (error) {
-      console.error("Error during logout:", error);
-    }
-  };
-
-  if (!user) {
-    // Redirect to the sign-in page if user is not authenticated
-    return <Navigate to="/signin" />;
-  }
-
+  console.log("this is user data" + userData);
   return (
-    <div>
-      <h1>Welcome, {user.name}</h1>
-      <p>Email: {user.email}</p>
-      <p>Role: {user.role}</p>
-      <button onClick={handleLogout}>Logout</button>
-    </div>
+    <>
+      <button onClick={handleLogout}>logout</button>
+    </>
+    // <div>
+    //   <h1>Welcome to the Home Page</h1>
+    //   {userData && (
+    //     <div>
+    //       <h2>User Information</h2>
+    //       <p>Name: {userData.name}</p>
+    //       <p>Email: {userData.email}</p>
+    //       Render other user data as needed
+    //     </div>
+    //   )}
+    // </div>
   );
 };
 
