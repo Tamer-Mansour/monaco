@@ -25,6 +25,8 @@ const Profile: React.FC = () => {
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
+    console.log(storedUser);
+    
 
     if (storedUser) {
       const parsedUser: { message: string; user: User } =

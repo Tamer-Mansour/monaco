@@ -7,6 +7,8 @@ import IDE from "../IDE/Index";
 import Notfound from "../Pages/Notfound";
 import Dashboard from "../dashbord/Dashboard";
 import Profile from "../Pages/Profile";
+import AddQuestion from "../questions";
+import QuestionsList from "../questions/QuestionsList";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -17,6 +19,8 @@ const AppRoutes: React.FC = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/home" element={<Home />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/addquestions" element={<AddQuestion />} />
+        <Route path="/questions" element={<QuestionsList />} />
         <Route path="/ide" element={<IDE />} />
         <Route path="/*" element={<Notfound />} />
       </Routes>

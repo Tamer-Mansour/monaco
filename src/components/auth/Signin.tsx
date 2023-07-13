@@ -34,8 +34,8 @@ const Signin = () => {
       setEmail("");
       setPassword("");
       setError("");
-      localStorage.setItem("user", JSON.stringify(response.data));      
-      window.location.href = ('/profile')
+      localStorage.setItem("user", JSON.stringify(response.data));
+      window.location.href = "/profile";
     } catch (error) {
       console.error("Error during login:", error);
       setError("Invalid credentials");

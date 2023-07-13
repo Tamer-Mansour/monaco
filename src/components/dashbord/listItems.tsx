@@ -50,5 +50,12 @@ export const secondaryListItems = (
       </ListItemIcon>
       <ListItemText primary="Ide" />
     </ListItemButton>
+
+    <ListItemButton href="/chatbot">
+      <ListItemIcon>
+        <AssignmentIcon />
+      </ListItemIcon>
+      <ListItemText primary="ChatBot" />
+    </ListItemButton>
   </React.Fragment>
 );
