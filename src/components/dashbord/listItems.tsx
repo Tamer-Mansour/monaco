@@ -41,19 +41,19 @@ export const mainListItems = () => {
 
       {userRole === "Teacher" && (
         <>
-        <ListItemButton href="/addquestions">
-          <ListItemIcon>
-            <PeopleIcon />
-          </ListItemIcon>
-          <ListItemText primary="Add Questions" />
-        </ListItemButton>
+          <ListItemButton href="/addquestions">
+            <ListItemIcon>
+              <PeopleIcon />
+            </ListItemIcon>
+            <ListItemText primary="Add Questions" />
+          </ListItemButton>
 
-        <ListItemButton href="/students">
-          <ListItemIcon>
-            <PeopleIcon />
-          </ListItemIcon>
-          <ListItemText primary="Students" />
-        </ListItemButton>
+          <ListItemButton href="/students">
+            <ListItemIcon>
+              <PeopleIcon />
+            </ListItemIcon>
+            <ListItemText primary="Students" />
+          </ListItemButton>
         </>
       )}
       {userRole === "Teacher" && (
@@ -79,18 +79,17 @@ export const secondaryListItems = () => {
   }
   return (
     <React.Fragment>
+      <ListSubheader component="div" inset>
+        Fetchers
+      </ListSubheader>
+      <ListItemButton href="/ide">
+        <ListItemIcon>
+          <AssignmentIcon />
+        </ListItemIcon>
+        <ListItemText primary="Ide" />
+      </ListItemButton>
       {userRole === "Teacher" && (
         <>
-          <ListSubheader component="div" inset>
-            Fetchers
-          </ListSubheader>
-          <ListItemButton href="/ide">
-            <ListItemIcon>
-              <AssignmentIcon />
-            </ListItemIcon>
-            <ListItemText primary="Ide" />
-          </ListItemButton>
-
           <ListItemButton href="/chatbot">
             <ListItemIcon>
               <AssignmentIcon />
