@@ -7,46 +7,59 @@ interface Question {
   description: string;
 }
 
-interface Answer {
+interface User {
   _id: string;
-  studentId: string;
-  answer: string;
+  role: string;
 }
 
 const QuestionsList: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
-  const [answers, setAnswers] = useState<Answer[]>([]);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    // Fetch the list of questions
-    axios
-      .get("http://localhost:5000/questions")
-      .then((response) => {
-        setQuestions(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching questions:", error);
-      });
-
-    // Fetch the list of answers
-    axios
-      .get("/answers")
-      .then((response) => {
-        setAnswers(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching answers:", error);
-      });
+    fetchQuestions();
+    fetchUser();
   }, []);
 
+  const fetchQuestions = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/questions");
+      setQuestions(response.data);
+    } catch (error) {
+      console.error("Error fetching questions:", error);
+    }
+  };
+
+  const fetchUser = async () => {
+    try {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        const parsedUser: { message: string; user: User } =
+          JSON.parse(storedUser);
+        if (parsedUser.user && parsedUser.user._id) {
+          const response = await axios.get(
+            `http://localhost:5000/users/${parsedUser.user._id}`
+          );
+          setUser(response.data);
+        } else {
+          // Handle invalid user data
+        }
+      } else {
+        // Handle user not found in localStorage
+      }
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    }
+  };
+
   const handleAnswerQuestion = (questionId: string) => {
-    // Implement the logic for students to answer a question
-    // You can redirect to a separate page or display a form here
+    // Redirect to the answer page for students
+    window.location.href = `/questions/${questionId}/answer`;
   };
 
   const handleViewAnswers = (questionId: string) => {
-    // Implement the logic for teachers to view students' answers to a question
-    // You can redirect to a separate page or display a modal here
+    // Redirect to the view answers page for teachers
+    window.location.href = `/questions/${questionId}/answers`;
   };
 
   return (
@@ -66,12 +79,15 @@ const QuestionsList: React.FC = () => {
               <td>{question.title}</td>
               <td>{question.description}</td>
               <td>
-                <button onClick={() => handleAnswerQuestion(question._id)}>
-                  Answer
-                </button>
-                <button onClick={() => handleViewAnswers(question._id)}>
-                  View Answers
-                </button>
+                {user?.role === "Teacher" ? (
+                  <button onClick={() => handleViewAnswers(question._id)}>
+                    View Answers
+                  </button>
+                ) : (
+                  <button onClick={() => handleAnswerQuestion(question._id)}>
+                    Answer
+                  </button>
+                )}
               </td>
             </tr>
           ))}

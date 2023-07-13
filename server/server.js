@@ -219,11 +219,13 @@ app.get("/questions/:id", (req, res) => {
     });
 });
 
-/// Submit an answer to a question
+// Submit an answer to a question
 app.post("/questions/:id/answers", (req, res) => {
   const { id } = req.params;
   const { answer, codeSnippet } = req.body;
-  const { userId } = req.user;
+
+  // Update the logic to retrieve the user ID based on your authentication mechanism
+  const userId = req.user?._id;
 
   Question.findById(id)
     .then((question) => {
@@ -249,6 +251,7 @@ app.post("/questions/:id/answers", (req, res) => {
       res.status(500).json({ message: "Internal server error" });
     });
 });
+
 
 // Get a student's answer to a question
 app.get("/questions/:id/answers/:studentId", (req, res) => {
