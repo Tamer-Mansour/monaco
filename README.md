@@ -29,3 +29,18 @@ node server.js
 ```
 
 This will start the backend server, and it will be accessible at [http://localhost:5000](http://localhost:5000).
+
+
+After run the code without any errors you shuld to create mongodb schema named
+
+```bash
+monaco
+```
+
+it will be 
+
+```bash
+mongodb://localhost:27017/monaco
+```
+
+For now you can easlly create two users the first with Role Teacher and the second with Role Stuent

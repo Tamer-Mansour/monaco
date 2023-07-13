@@ -10,52 +10,95 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import LayersIcon from "@mui/icons-material/Layers";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 
-export const mainListItems = (
-  <React.Fragment>
-    <ListItemButton href="/profile">
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
-      <ListItemText primary="User Page" />
-    </ListItemButton>
-    <ListItemButton href="/questions">
-      <ListItemIcon>
-        <ShoppingCartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Qestions" />
-    </ListItemButton>
-    <ListItemButton href="/students">
-      <ListItemIcon>
-        <PeopleIcon />
-      </ListItemIcon>
-      <ListItemText primary="Students" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <BarChartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Students answers" />
-    </ListItemButton>
-  </React.Fragment>
-);
+interface User {
+  role: string;
+}
 
-export const secondaryListItems = (
-  <React.Fragment>
-    <ListSubheader component="div" inset>
-      Fetchers
-    </ListSubheader>
-    <ListItemButton href="/ide">
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Ide" />
-    </ListItemButton>
+export const mainListItems = () => {
+  const storedUser = localStorage.getItem("user");
+  let userRole = "";
+  console.log("userRole" + userRole);
 
-    <ListItemButton href="/chatbot">
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="ChatBot" />
-    </ListItemButton>
-  </React.Fragment>
-);
+  if (storedUser) {
+    const parsedUser: { message: string; user: User } = JSON.parse(storedUser);
+    userRole = parsedUser.user?.role || "";
+  }
+
+  return (
+    <React.Fragment>
+      <ListItemButton href="/profile">
+        <ListItemIcon>
+          <DashboardIcon />
+        </ListItemIcon>
+        <ListItemText primary="User Page" />
+      </ListItemButton>
+      <ListItemButton href="/questions">
+        <ListItemIcon>
+          <ShoppingCartIcon />
+        </ListItemIcon>
+        <ListItemText primary="Questions" />
+      </ListItemButton>
+
+      {userRole === "Teacher" && (
+        <>
+        <ListItemButton href="/addquestions">
+          <ListItemIcon>
+            <PeopleIcon />
+          </ListItemIcon>
+          <ListItemText primary="Add Questions" />
+        </ListItemButton>
+
+        <ListItemButton href="/students">
+          <ListItemIcon>
+            <PeopleIcon />
+          </ListItemIcon>
+          <ListItemText primary="Students" />
+        </ListItemButton>
+        </>
+      )}
+      {userRole === "Teacher" && (
+        <ListItemButton>
+          <ListItemIcon>
+            <BarChartIcon />
+          </ListItemIcon>
+          <ListItemText primary="Students answers" />
+        </ListItemButton>
+      )}
+    </React.Fragment>
+  );
+};
+
+export const secondaryListItems = () => {
+  const storedUser = localStorage.getItem("user");
+  let userRole = "";
+  console.log("userRole" + userRole);
+
+  if (storedUser) {
+    const parsedUser: { message: string; user: User } = JSON.parse(storedUser);
+    userRole = parsedUser.user?.role || "";
+  }
+  return (
+    <React.Fragment>
+      {userRole === "Teacher" && (
+        <>
+          <ListSubheader component="div" inset>
+            Fetchers
+          </ListSubheader>
+          <ListItemButton href="/ide">
+            <ListItemIcon>
+              <AssignmentIcon />
+            </ListItemIcon>
+            <ListItemText primary="Ide" />
+          </ListItemButton>
+
+          <ListItemButton href="/chatbot">
+            <ListItemIcon>
+              <AssignmentIcon />
+            </ListItemIcon>
+            <ListItemText primary="ChatBot" />
+          </ListItemButton>
+        </>
+      )}
+    </React.Fragment>
+  );
+};

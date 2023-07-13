@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import { Typography, TextField, Button } from "@mui/material";
 import Editor from "@monaco-editor/react";
 
 interface User {
@@ -66,34 +67,35 @@ const AddQuestion: React.FC = () => {
   };
 
   if (!user || user.role !== "Teacher") {
-    return <div>You are not authorized to access this page.</div>;
+    return <Typography variant="h6">You are not authorized to access this page.</Typography>;
   }
 
   return (
     <div>
-      <h2>Add Question</h2>
+      <Typography variant="h4">Add Question</Typography>
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="title">Title:</label>
-          <input
-            type="text"
-            id="title"
+          <TextField
+            label="Title"
+            variant="outlined"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
           />
         </div>
         <div>
-          <label htmlFor="description">Description:</label>
-          <textarea
-            id="description"
+          <TextField
+            label="Description"
+            variant="outlined"
+            multiline
+            rows={4}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             required
           />
         </div>
         <div>
-          <label htmlFor="codeSnippet">Code Snippet:</label>
+          <Typography variant="subtitle1">Code Snippet:</Typography>
           <Editor
             height="200px"
             defaultLanguage="javascript"
@@ -109,7 +111,7 @@ const AddQuestion: React.FC = () => {
             onMount={(editor) => (editorRef.current = editor)}
           />
         </div>
-        <button type="submit">Add Question</button>
+        <Button variant="contained" type="submit">Add Question</Button>
       </form>
     </div>
   );
