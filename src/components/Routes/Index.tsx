@@ -55,7 +55,7 @@ const AppRoutes: React.FC = () => {
             <Route path="/profile" element={<Profile />} />
             <Route path="/addquestions" element={<AddQuestion />} />
             <Route path="/questions" element={<QuestionsList />} />
-            <Route path="/ide" element={<IDE />} />
+            {/* <Route path="/ide" element={<IDE />} /> */}
             <Route path="/students" element={<Students />} />
             <Route path="/students/:id" element={<StudentDetailsPage />} />
             <Route path="/questions/:id/answer" element={<AnswerQuestionPage />} />
