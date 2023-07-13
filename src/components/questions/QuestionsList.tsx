@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import {
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Button,
+  Typography,
+} from "@mui/material";
 
 interface Question {
   _id: string;
@@ -64,35 +73,35 @@ const QuestionsList: React.FC = () => {
 
   return (
     <div>
-      <h2>Questions</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
+      <Typography variant="h4">Questions</Typography>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Title</TableCell>
+            <TableCell>Description</TableCell>
+            <TableCell>Action</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {questions.map((question) => (
-            <tr key={question._id}>
-              <td>{question.title}</td>
-              <td>{question.description}</td>
-              <td>
+            <TableRow key={question._id}>
+              <TableCell>{question.title}</TableCell>
+              <TableCell>{question.description}</TableCell>
+              <TableCell>
                 {user?.role === "Teacher" ? (
-                  <button onClick={() => handleViewAnswers(question._id)}>
+                  <Button onClick={() => handleViewAnswers(question._id)}>
                     View Answers
-                  </button>
+                  </Button>
                 ) : (
-                  <button onClick={() => handleAnswerQuestion(question._id)}>
+                  <Button onClick={() => handleAnswerQuestion(question._id)}>
                     Answer
-                  </button>
+                  </Button>
                 )}
-              </td>
-            </tr>
+              </TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     </div>
   );
 };

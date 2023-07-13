@@ -12,6 +12,7 @@ import QuestionsList from "../questions/QuestionsList";
 import Students from "../Pages/Students";
 import StudentDetailsPage from "../Pages/StudentDetailsPage";
 import AnswerQuestionPage from "../questions/AnswerQuestionPage";
+import ChatGPT from "../chatbot";
 
 interface User {
   _id: string;
@@ -59,6 +60,7 @@ const AppRoutes: React.FC = () => {
             <Route path="/students" element={<Students />} />
             <Route path="/students/:id" element={<StudentDetailsPage />} />
             <Route path="/questions/:id/answer" element={<AnswerQuestionPage />} />
+            <Route path="/chatbot" element={<ChatGPT />} />
             <Route path="/*" element={<Notfound />} />
           </>
         ) : null}

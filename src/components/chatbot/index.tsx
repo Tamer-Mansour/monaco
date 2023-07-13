@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import './ChatBot.css';
 import openai from 'openai';
 
 const API_KEY = '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';
