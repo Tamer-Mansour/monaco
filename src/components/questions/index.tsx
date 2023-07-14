@@ -161,6 +161,7 @@ const AddQuestion: React.FC = () => {
           <Editor
             height="200px"
             defaultLanguage="javascript"
+            defaultValue="//write your code here"
             value={codeSnippet}
             onChange={(value: string | undefined) =>
               setCodeSnippet(value || "")

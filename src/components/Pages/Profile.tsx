@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import { Alert, CircularProgress } from "@mui/material";
+import { Alert, CircularProgress, Skeleton, Stack } from "@mui/material";
 
 interface User {
   _id: string;
@@ -22,21 +22,28 @@ const Profile: React.FC = () => {
   const [email, setEmail] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    console.log(storedUser);
-    
 
     if (storedUser) {
-      const parsedUser: { message: string; user: User } =
-        JSON.parse(storedUser);
+      const parsedUser: { message: string; user: User } = JSON.parse(storedUser);
 
       if (parsedUser.user && parsedUser.user._id) {
         fetchUser(parsedUser.user._id);
       } else {
+        setIsLoading(false);
       }
+    } else {
+      setIsLoading(false);
     }
+
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const fetchUser = async (userId: string) => {
@@ -49,6 +56,7 @@ const Profile: React.FC = () => {
       console.error("Error retrieving user:", error);
     }
   };
+
   const handleLogout = () => {
     localStorage.removeItem("user");
     window.location.href = "/signin";
@@ -56,13 +64,10 @@ const Profile: React.FC = () => {
 
   const handleUpdate = async () => {
     try {
-      const response = await axios.put(
-        `http://localhost:5000/users/${user?._id}`,
-        {
-          name,
-          email,
-        }
-      );
+      const response = await axios.put(`http://localhost:5000/users/${user?._id}`, {
+        name,
+        email,
+      });
       setSuccessMessage("Profile updated successfully");
 
       // Update the stored user data in localStorage
@@ -76,13 +81,20 @@ const Profile: React.FC = () => {
 
   return (
     <Container maxWidth="md">
-      {user ? (
-        <Box>
+      {isLoading ? (
+        <Stack spacing={1}>
+          <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
+          <Skeleton variant="circular" width={40} height={40} />
+          <Skeleton variant="rectangular" height={60} />
+          <Skeleton variant="rounded" height={60} />
+        </Stack>
+      ) : (
+        <>
           <Typography variant="h4" component="h1" align="center" gutterBottom>
             Welcome {name}
           </Typography>
           <Button variant="contained" color="primary" onClick={handleLogout}>
-          logout
+            Logout
           </Button>
           <TextField
             margin="normal"
@@ -111,11 +123,7 @@ const Profile: React.FC = () => {
               {errorMessage}
             </Alert>
           )}
-        </Box>
-      ) : (
-        <Typography variant="body1" align="center">
-          <CircularProgress />
-        </Typography>
+        </>
       )}
     </Container>
   );

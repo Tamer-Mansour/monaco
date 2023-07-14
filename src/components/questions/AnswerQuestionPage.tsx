@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import { Typography, TextField, Button } from "@mui/material";
-import { Editor } from "@monaco-editor/react";
+import { Editor, OnChange } from "@monaco-editor/react";
+import axios from "axios";
 
 interface Question {
   _id: string;
@@ -25,56 +25,68 @@ interface User {
 
 const AnswerQuestionPage: React.FC = () => {
   const [answer, setAnswer] = useState("");
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id?: string }>(); // This is the ID for the question
   const [user, setUser] = useState<User | null>(null);
   const [question, setQuestion] = useState<Question | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetchUser();
-    fetchQuestion();
+    const storedUser = localStorage.getItem("user");
+
+    if (storedUser) {
+      const parsedUser: { message: string; user: User } = JSON.parse(storedUser);
+
+      if (parsedUser.user && parsedUser.user._id) {
+        fetchUser(parsedUser.user._id);
+        fetchQuestion(id);
+      } else {
+        setIsLoading(false);
+      }
+    } else {
+      setIsLoading(false);
+    }
   }, []);
 
-  const fetchUser = async () => {
-    console.log(id);
-
+  const fetchUser = async (userId: string) => {
     try {
-      const response = await axios.get("http://localhost:5000/user"); // Replace with the appropriate endpoint to fetch the user
-      setUser(response.data);
+      const fetchedUser: User = JSON.parse(localStorage.getItem("user")!);
+      setUser(fetchedUser);
     } catch (error) {
       console.error("Error fetching user:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const fetchQuestion = async () => {
-    try {
-      const response = await axios.get(`http://localhost:5000/questions/${id}`); // Replace with the appropriate endpoint to fetch the question
-      setQuestion(response.data);
-    } catch (error) {
-      console.error("Error fetching question:", error);
+  const fetchQuestion = async (questionId?: string) => {
+    if (questionId) {
+      try {
+        const response = await axios.get(`http://localhost:5000/questions/${questionId}`);
+        setQuestion(response.data);
+      } catch (error) {
+        console.error("Error fetching question:", error);
+      }
     }
   };
 
-  const handleAnswerChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
-    setAnswer(event.target.value);
+  const handleAnswerChange: OnChange = (value, event) => {
+    setAnswer(value || "");
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (user && user.role === "student") {
+    if (user && user.role === "Student") {
       try {
         const response = await axios.post(
           `http://localhost:5000/questions/${id}/answers`,
           {
             answer,
-            codeSnippet: question?.codeSnippet, // Pass the codeSnippet from the fetched question
-            studentId: user._id, // Pass the student ID as part of the answer submission
+            codeSnippet: question?.codeSnippet,
+            studentId: user._id,
           }
         );
 
-        // Handle success and redirect to a success page or perform any other necessary actions
         console.log("Answer submitted successfully:", response.data);
       } catch (error) {
         console.error("Error submitting answer:", error);
@@ -84,37 +96,31 @@ const AnswerQuestionPage: React.FC = () => {
     }
   };
 
+  if (isLoading) {
+    return <div>Loading user data...</div>;
+  }
+
   return (
     <div>
       {question ? (
         <div>
           <Typography variant="h2">{question.title}</Typography>
           <Typography variant="body1">{question.description}</Typography>
-          {/* <Typography variant="body1">{question.codeSnippet}</Typography> */}
-          
-          <Editor
-            height="50vh"
-            defaultLanguage="javascript"
-            defaultValue={question.codeSnippet}
-          />
+          <form onSubmit={handleSubmit}>
+            <Editor
+              height="50vh"
+              defaultLanguage="javascript"
+              defaultValue={question.codeSnippet}
+              onChange={handleAnswerChange}
+            />
+            <Button variant="contained" type="submit">
+              Submit Answer
+            </Button>
+          </form>
         </div>
       ) : (
         <Typography variant="body1">Loading question...</Typography>
       )}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <TextField
-            label="Your Answer"
-            multiline
-            value={answer}
-            onChange={handleAnswerChange}
-          />
-
-        </div>
-        <Button variant="contained" type="submit">
-          Submit Answer
-        </Button>
-      </form>
     </div>
   );
 };

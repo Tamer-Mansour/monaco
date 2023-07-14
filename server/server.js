@@ -58,13 +58,11 @@ const Question = mongoose.model("Question", {
 });
 // login
 app.post("/login", async (req, res) => {
-    console.log("hereeeeeeeeeeee")
   const { email, password } = req.body;
 
   try {
     // Find the user with the given email
     const user = await User.findOne({ email });
-    console.log(user._id + "<<<<<<<<<<<<<<")
     if (!user || user.password !== password) {
         console.log("not found")
       return res.status(401).json({ message: "Invalid credentials" });
@@ -72,7 +70,6 @@ app.post("/login", async (req, res) => {
 
     // Return the user details
     res.json({ message: "Login successful", user });
-    console.log(user._id);
   } catch (error) {
     console.error("Error during login:", error);
     res.status(500).json({ message: "Internal server error" });
