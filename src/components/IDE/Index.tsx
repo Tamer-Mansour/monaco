@@ -1,59 +1,70 @@
 import Editor from "@monaco-editor/react";
 import React, { useRef, useState } from "react";
+import axios from "axios";
 
 const IDE = () => {
   const editorRef = useRef<any>(null); // Use 'any' as the type for editorRef
   const [consoleOutput, setConsoleOutput] = useState<string>("");
   const [inputValue, setInputValue] = useState<string>("");
 
-  function handleEditorDidMount(editor: any, monaco: any) {
+  const handleEditorDidMount = (editor: any, monaco: any) => {
     editorRef.current = editor;
-  }
+  };
 
-  function showValue() {
+  const showValue = () => {
     if (editorRef.current) {
       const value = editorRef.current.getValue();
       alert(value);
     } else {
       alert("Editor is not available.");
     }
-  }
+  };
 
-  function captureConsoleLog() {
+  const captureConsoleLog = () => {
     const originalConsoleLog = console.log;
     console.log = (...args: any[]) => {
-      setConsoleOutput(prevOutput => prevOutput + args.join(" ") + "\n");
+      setConsoleOutput((prevOutput) => prevOutput + args.join(" ") + "\n");
     };
-  }
+  };
 
-  function runCode() {
+  const runCode = async () => {
     if (editorRef.current) {
-      const value = editorRef.current.getValue();
+      const code = editorRef.current.getValue();
 
       try {
         setConsoleOutput(""); // Clear previous output
         captureConsoleLog();
-        eval(value);
+
+        const response = await axios.post("http://localhost:2000/api/v2/execute", {
+          language: "javascript",
+          version: "14.17.3",
+          source: code,
+        });
+
+        const result = response.data;
+
+        // Process the result as needed
+        console.log(result);
       } catch (error) {
         setConsoleOutput(String(error));
       }
     } else {
       alert("Editor is not available.");
     }
-  }
+  };
 
-  function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
-  }
+  };
 
-  function handleInputSubmit(event: React.FormEvent<HTMLFormElement>) {
+  const handleInputSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (inputValue) {
       console.log(inputValue);
       setInputValue("");
     }
-  }
+  };
 
   return (
     <div>

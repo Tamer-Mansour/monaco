@@ -8,9 +8,6 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     // Retrieve user data from localStorage
     const storedUser = localStorage.getItem("user");
-    console.log("7777777777777777777" + storedUser);
-    console.log("2222222222222222222" + userData);
-
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUserData(parsedUser);
@@ -25,20 +22,16 @@ const HomePage: React.FC = () => {
 
   console.log("this is user data" + userData);
   return (
-    <>
-      <button onClick={handleLogout}>logout</button>
+    <>    
+    <div>
+      <h1>Welcome to the Home Page</h1>
+      {userData && (
+        <div>
+          Render other user data as needed
+        </div>
+      )}
+    </div>
     </>
-    // <div>
-    //   <h1>Welcome to the Home Page</h1>
-    //   {userData && (
-    //     <div>
-    //       <h2>User Information</h2>
-    //       <p>Name: {userData.name}</p>
-    //       <p>Email: {userData.email}</p>
-    //       Render other user data as needed
-    //     </div>
-    //   )}
-    // </div>
   );
 };
 
