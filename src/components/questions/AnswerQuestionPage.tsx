@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Typography, TextField, Button } from "@mui/material";
+import { Typography, Button } from "@mui/material";
 import { Editor, OnChange } from "@monaco-editor/react";
 import axios from "axios";
 
@@ -49,8 +49,8 @@ const AnswerQuestionPage: React.FC = () => {
 
   const fetchUser = async (userId: string) => {
     try {
-      const fetchedUser: User = JSON.parse(localStorage.getItem("user")!);
-      setUser(fetchedUser);
+      const response = await axios.get(`http://localhost:5000/users/${userId}`);
+      setUser(response.data);
     } catch (error) {
       console.error("Error fetching user:", error);
     } finally {
@@ -78,13 +78,15 @@ const AnswerQuestionPage: React.FC = () => {
 
     if (user && user.role === "Student") {
       try {
+        const answerData = {
+          studentId: user._id,
+          answer,
+          codeSnippet: question?.codeSnippet,
+        };
+
         const response = await axios.post(
           `http://localhost:5000/questions/${id}/answers`,
-          {
-            answer,
-            codeSnippet: question?.codeSnippet,
-            studentId: user._id,
-          }
+          answerData
         );
 
         console.log("Answer submitted successfully:", response.data);

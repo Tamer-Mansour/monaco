@@ -223,7 +223,7 @@ app.post("/questions/:id/answers", (req, res) => {
 
   // Update the logic to retrieve the user ID based on your authentication mechanism
   const userId = req.user?._id;
-
+console.log(userId);
   Question.findById(id)
     .then((question) => {
       if (!question) {
@@ -249,20 +249,21 @@ app.post("/questions/:id/answers", (req, res) => {
     });
 });
 
-
 // Get a student's answer to a question
 app.get("/questions/:id/answers/:studentId", (req, res) => {
   const { id, studentId } = req.params;
 
   Question.findById(id)
+    .populate("answers.studentId")
     .then((question) => {
       if (!question) {
         return res.status(404).json({ message: "Question not found" });
       }
 
       const answer = question.answers.find(
-        (ans) => ans.studentId.toString() === studentId
+        (ans) => ans.studentId._id.toString() === studentId
       );
+      console.log("this is answer: " + answer);
 
       if (!answer) {
         return res.status(404).json({ message: "Answer not found" });
@@ -275,6 +276,25 @@ app.get("/questions/:id/answers/:studentId", (req, res) => {
       res.status(500).json({ message: "Internal server error" });
     });
 });
+// Get all answers for a question
+app.get("/questions/:id/answers", (req, res) => {
+  const { id } = req.params;
+
+  Question.findById(id)
+    .populate("answers.studentId") // Populate the studentId reference field
+    .then((question) => {
+      if (!question) {
+        return res.status(404).json({ message: "Question not found" });
+      }
+
+      res.json(question.answers);
+    })
+    .catch((error) => {
+      console.error("Error fetching answers for a question:", error);
+      res.status(500).json({ message: "Internal server error" });
+    });
+});
+
 
 // Start the server
 const port = 5000;
