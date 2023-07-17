@@ -30,28 +30,39 @@ const IDE = () => {
   const runCode = async () => {
     if (editorRef.current) {
       const code = editorRef.current.getValue();
-
+  
       try {
         setConsoleOutput(""); // Clear previous output
         captureConsoleLog();
-
-        const response = await axios.post("http://localhost:2000/api/v2/execute", {
-          language: "javascript",
-          version: "14.17.3",
-          source: code,
-        });
-
+  
+        const response = await axios.post(
+          "https://emkc.org/api/v2/piston/execute",
+          {
+            language: "javascript",
+            version: "15.10.0",
+            files: [
+              {
+                name: "main.js",
+                content: code,
+              },
+            ],
+            stdin: "",
+            args: [],
+          }
+        );
+  
         const result = response.data;
-
+  
         // Process the result as needed
         console.log(result);
-      } catch (error) {
+      } catch (error) { 
         setConsoleOutput(String(error));
       }
     } else {
       alert("Editor is not available.");
     }
   };
+  
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
