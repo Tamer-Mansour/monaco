@@ -28,6 +28,7 @@ const IDE = () => {
   };
 
   const runCode = async () => {
+    console.log("dsdsdfsfsdffgffg")
     if (editorRef.current) {
       const code = editorRef.current.getValue();
   
@@ -36,9 +37,9 @@ const IDE = () => {
         captureConsoleLog();
   
         const response = await axios.post(
-          "https://emkc.org/api/v2/piston/execute",
+          "http://127.0.0.1:2000/api/v2/execute",
           {
-            language: "javascript",
+            language: "js",
             version: "15.10.0",
             files: [
               {
