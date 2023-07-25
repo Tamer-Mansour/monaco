@@ -103,7 +103,13 @@ const AddQuestion: React.FC = () => {
       try {
         setConsoleOutput(""); // Clear previous output
         captureConsoleLog();
-        eval(value);
+
+        const startTime = performance.now();
+        const result = eval(value);
+        const endTime = performance.now();
+        const runtime = endTime - startTime;
+
+        setConsoleOutput((prevOutput) => prevOutput + `\nRuntime: ${runtime.toFixed(2)}ms\nResult: ${result}`);
       } catch (error) {
         setConsoleOutput(String(error));
       }
