@@ -23,6 +23,7 @@ const IDE = () => {
   };
 
   const runCode = async () => {
+    console.log("dsdsdfsfsdffgffg")
     if (editorRef.current) {
       const code = editorRef.current.getValue();
 
