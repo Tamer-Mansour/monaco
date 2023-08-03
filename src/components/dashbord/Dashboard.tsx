@@ -12,8 +12,6 @@ import IconButton from "@mui/material/IconButton";
 import Badge from "@mui/material/Badge";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
-import Link from "@mui/material/Link";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -172,17 +170,8 @@ export default function Dashboard() {
             <Grid container spacing={3}>
               {/* Routs will be here */}
               <Grid item xs={12} md={12} lg={12}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: "flex",
-                    flexDirection: "column",
-                    height: 580,
-                  }}
-                >
-                  {/* here we will add routes */}
-                  <AppRoutes />
-                </Paper>
+                {/* here we will add routes */}
+                <AppRoutes />
               </Grid>
             </Grid>
           </Container>
